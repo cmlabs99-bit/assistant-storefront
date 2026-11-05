@@ -1,5 +1,7 @@
 # Assistant Storefront
 
+[![CI](https://github.com/cmlabs99-bit/assistant-storefront/actions/workflows/ci.yml/badge.svg)](https://github.com/cmlabs99-bit/assistant-storefront/actions/workflows/ci.yml)
+
 **Live demo:** https://assistant-storefr.web.app · **API health:** https://assistant-storefront-api.onrender.com/health
 
 > The API runs on Render's free tier and sleeps when idle; the first request after a quiet period can take 30–60 seconds. Reload if the catalog is empty on first visit.
