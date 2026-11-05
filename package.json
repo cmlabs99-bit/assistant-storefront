@@ -1,0 +1,27 @@
+{
+  "name": "assistant-storefront",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A small, production-shaped storefront (React + Vite, Express + TypeScript, Postgres via Supabase) that AI assistants can drive through an MCP server.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev -w @storefront/api\" \"npm run dev -w @storefront/web\"",
+    "build": "npm run build -w @storefront/shared && npm run build -w @storefront/api && npm run build -w @storefront/web && npm run build -w @storefront/mcp",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md,css}\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
