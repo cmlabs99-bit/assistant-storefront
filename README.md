@@ -1,5 +1,9 @@
 # Assistant Storefront
 
+**Live demo:** https://assistant-storefr.web.app · **API health:** https://assistant-storefront-api.onrender.com/health
+
+> The API runs on Render's free tier and sleeps when idle; the first request after a quiet period can take 30–60 seconds. Reload if the catalog is empty on first visit.
+
 A small, production-shaped e-commerce app that an AI assistant can drive.
 
 - **Web**: React + Vite + TypeScript — catalog with search, product pages, a cart that survives refresh, checkout.
@@ -63,6 +67,8 @@ The service-role key bypasses RLS and must only ever live on the server. RLS is 
 
 ## Using the MCP server
 
+![Claude Code shopping through the MCP server](docs/mcp-demo.png)
+
 Build it once (`npm run build -w @storefront/mcp`), start the API, then register it with your client.
 
 **Claude Desktop** (`claude_desktop_config.json`):
@@ -113,9 +119,13 @@ CI runs typecheck, tests, and build on every push (`.github/workflows/ci.yml`).
 
 ## Deploying
 
-- **Database**: Supabase (free tier is fine).
-- **API**: any Node host — Railway, Render, Fly.io. Build command `npm run build -w @storefront/shared && npm run build -w @storefront/api`, start command `node apps/api/dist/server.js`, set the env vars from `.env.example`, and add your web origin to `CORS_ORIGINS`.
-- **Web**: Vercel or Netlify. Root `apps/web`, build `npm run build`, output `dist`, env `VITE_API_URL=https://<your-api>`.
+This demo runs on three free tiers:
+
+- **Database** — Supabase: run `supabase/schema.sql` then `supabase/seed.sql` in the SQL editor.
+- **API** — Render web service. Build: `npm ci && npm run build -w @storefront/shared && npm run build -w @storefront/api`. Start: `node apps/api/dist/server.js`. Env: `STORE_BACKEND=supabase`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (the project's secret key), `CORS_ORIGINS=<web origin>`.
+- **Web** — Firebase Hosting (`firebase.json` serves `apps/web/dist` as a single-page app). Set `VITE_API_URL` in `apps/web/.env.production`, then `npm run build -w @storefront/web && firebase deploy --only hosting`.
+
+Any Node host and any static host work the same way; nothing is Render- or Firebase-specific.
 
 ## Design decisions worth asking me about
 
