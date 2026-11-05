@@ -21,12 +21,18 @@ create table if not exists products (
 );
 
 -- Full-text search over name, description, and tags.
+-- array_to_string() is only STABLE, and a generated column requires IMMUTABLE
+-- expressions, so wrap it. For text[] input the result is deterministic.
+create or replace function tags_to_text(text[]) returns text
+language sql immutable parallel safe
+as $$ select coalesce(array_to_string($1, ' '), '') $$;
+
 alter table products
   add column if not exists search tsvector
   generated always as (
     setweight(to_tsvector('english', coalesce(name, '')), 'A') ||
     setweight(to_tsvector('english', coalesce(description, '')), 'B') ||
-    setweight(to_tsvector('english', array_to_string(tags, ' ')), 'C')
+    setweight(to_tsvector('english', tags_to_text(tags)), 'C')
   ) stored;
 
 create index if not exists products_search_idx on products using gin (search);
